@@ -12,4 +12,6 @@ fun update() {
 
         Window.update()
     }
+
+    Window.destroy()
 }
