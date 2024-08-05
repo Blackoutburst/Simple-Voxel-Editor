@@ -1,5 +1,15 @@
 package dev.blackoutburst.sve
 
+import dev.blackoutburst.sve.window.Window
+
 fun main() {
-    println("Hello world!")
+    update()
+}
+
+fun update() {
+    while (Window.isOpen) {
+        Window.clear()
+
+        Window.update()
+    }
 }
