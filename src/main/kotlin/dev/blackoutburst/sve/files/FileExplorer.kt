@@ -1,4 +1,4 @@
-package dev.blackoutburst.sve
+package dev.blackoutburst.sve.files
 
 import dev.blackoutburst.sve.utils.default
 import javafx.application.Application
@@ -12,7 +12,7 @@ class FileExplorer : Application() {
         private var callback: (String?) -> Unit = {}
 
         fun pickFile(callback: (String?) -> Unit) {
-            this.callback = callback
+            Companion.callback = callback
 
             if (primaryStage == null)
                 default { launch(FileExplorer::class.java) }
@@ -33,7 +33,7 @@ class FileExplorer : Application() {
     }
 
     override fun start(primaryStage: Stage) {
-        FileExplorer.primaryStage = primaryStage
+        Companion.primaryStage = primaryStage
         showOpenDialog()
     }
 }

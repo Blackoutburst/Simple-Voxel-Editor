@@ -1,6 +1,7 @@
 package dev.blackoutburst.sve
 
 import dev.blackoutburst.sve.input.Keyboard
+import dev.blackoutburst.sve.files.FileExplorer
 import dev.blackoutburst.sve.window.Window
 import org.lwjgl.glfw.GLFW
 
