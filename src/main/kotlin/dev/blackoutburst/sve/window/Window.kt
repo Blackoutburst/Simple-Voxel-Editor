@@ -4,6 +4,7 @@ import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.input.Mouse
 import dev.blackoutburst.sve.maths.Vector2i
 import dev.blackoutburst.sve.utils.IOUtils
+import dev.blackoutburst.sve.utils.Time
 import dev.blackoutburst.sve.utils.stack
 import dev.blackoutburst.sve.window.callbacks.*
 import org.lwjgl.glfw.*
@@ -56,6 +57,8 @@ object Window {
 
     fun update() {
         isOpen = !(glfwWindowShouldClose(id))
+
+        Time.updateDelta()
         Mouse.update()
         Keyboard.update()
 

@@ -9,6 +9,8 @@ in vec3 FragPos;
 in vec4 Color;
 in vec3 Normal;
 
+out vec4 FragColor;
+
 void main() {
     vec3 normal = normalize(Normal);
     vec3 lightDir = vec3(0.4, 0.5, 0.25);

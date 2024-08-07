@@ -2,8 +2,10 @@ package dev.blackoutburst.sve.graphics
 
 import dev.blackoutburst.sve.camera.Camera
 import dev.blackoutburst.sve.maths.Matrix
+import dev.blackoutburst.sve.maths.Vector3f
 import dev.blackoutburst.sve.shader.Shader
 import dev.blackoutburst.sve.shader.ShaderProgram
+import dev.blackoutburst.sve.utils.Color
 import dev.blackoutburst.sve.utils.stack
 import org.lwjgl.opengl.GL30.*
 
@@ -15,7 +17,7 @@ class Model {
         private val shaderProgram = ShaderProgram(vertexShader, fragmentShader)
     }
 
-    val voxels = mutableListOf<Voxel>()
+    val voxels = mutableListOf(Voxel(Vector3f(0f), Color.WHITE))
 
     var vaoId = 0
     var vboId = 0
@@ -29,10 +31,11 @@ class Model {
         vboId = glGenBuffers()
         eboId = glGenBuffers()
 
-        generateVAO()
+        updateModel()
     }
 
     private fun generateVAO() {
+
         stack(128 * 1024) { stack ->
             glBindVertexArray(vaoId)
 
@@ -143,16 +146,20 @@ class Model {
         indices = indexArray.toIntArray()
     }
 
-    fun addVoxel(voxel: Voxel) {
-        voxels.add(voxel)
+    private fun updateModel() {
         calculateVertexArray()
         calculateIndexArray()
+        generateVAO()
+    }
+
+    fun addVoxel(voxel: Voxel) {
+        voxels.add(voxel)
+        updateModel()
     }
 
     fun removeVoxel(voxel: Voxel) {
         voxels.remove(voxel)
-        calculateVertexArray()
-        calculateIndexArray()
+        updateModel()
     }
 
     fun render() {
