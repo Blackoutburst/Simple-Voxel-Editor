@@ -6,6 +6,7 @@ import dev.blackoutburst.sve.files.FileExplorer
 import dev.blackoutburst.sve.graphics.Axys
 import dev.blackoutburst.sve.graphics.Grid
 import dev.blackoutburst.sve.graphics.Model
+import dev.blackoutburst.sve.ui.LeftPanel
 import dev.blackoutburst.sve.window.Window
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
@@ -24,16 +25,24 @@ fun update() {
     while (Window.isOpen) {
         Window.clear()
 
+        Grid.update()
+        Axys.update()
+        LeftPanel.update()
         Camera.update()
 
         if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_E)) {
             FileExplorer.pickFile {}
         }
 
+        glEnable(GL_DEPTH_TEST)
+
         Axys.render()
         Grid.render()
 
         model.render()
+
+        glDisable(GL_DEPTH_TEST)
+        LeftPanel.render()
 
         Window.update()
     }

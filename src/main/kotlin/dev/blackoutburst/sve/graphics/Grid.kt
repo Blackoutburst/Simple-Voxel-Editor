@@ -1,9 +1,11 @@
 package dev.blackoutburst.sve.graphics
 
 import dev.blackoutburst.sve.camera.Camera
+import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.shader.Shader
 import dev.blackoutburst.sve.shader.ShaderProgram
 import dev.blackoutburst.sve.utils.stack
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER
 import org.lwjgl.opengl.GL20.GL_VERTEX_SHADER
 import org.lwjgl.opengl.GL30.*
@@ -24,6 +26,13 @@ object Grid {
     private var indices: IntArray? = null
 
     private var indexCount = 0
+
+    private var visible = true
+
+    fun update() {
+        if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_G))
+            visible = !visible
+    }
 
     fun generateGrid() {
         val vertexArray = mutableListOf<Float>()
@@ -81,6 +90,8 @@ object Grid {
     }
 
     fun render() {
+        if (!visible) return
+
         glBindVertexArray(vaoId)
         glUseProgram(shaderProgram.id)
         shaderProgram.setUniformMat4("view", Camera.view)

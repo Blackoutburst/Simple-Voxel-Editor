@@ -5,6 +5,8 @@ import dev.blackoutburst.sve.input.Mouse
 import dev.blackoutburst.sve.maths.Matrix
 import dev.blackoutburst.sve.maths.Vector2f
 import dev.blackoutburst.sve.maths.Vector3f
+import dev.blackoutburst.sve.ui.LeftPanel
+import dev.blackoutburst.sve.window.Window
 import org.lwjgl.glfw.GLFW
 import kotlin.math.cos
 import kotlin.math.sin
@@ -21,6 +23,7 @@ object Camera {
 
     var view = Matrix().translate(position)
     var projection = Matrix().projectionMatrix(90f, 1000f, 0.1f)
+    var projection2D = Matrix().ortho2D(0f, Window.width.toFloat(), 0f, Window.height.toFloat(), -1f, 1f)
 
     val direction: Vector3f
         get() {
@@ -35,6 +38,8 @@ object Camera {
         }
 
     fun update() {
+        if (LeftPanel.clicked) return
+
         if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_R)) {
             position.set(0f, 0f, 5f)
             positionOffset.set(0f, 0f, 0f)

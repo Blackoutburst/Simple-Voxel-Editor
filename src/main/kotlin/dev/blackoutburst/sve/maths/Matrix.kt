@@ -461,6 +461,23 @@ class Matrix {
         return this
     }
 
+    fun scale(x: Float, y: Float): Matrix {
+        this.m00 = this.m00 * x
+        this.m01 = this.m01 * x
+        this.m02 = this.m02 * x
+        this.m03 = this.m03 * x
+        this.m10 = this.m10 * y
+        this.m11 = this.m11 * y
+        this.m12 = this.m12 * y
+        this.m13 = this.m13 * y
+        this.m20 = this.m20 * 1
+        this.m21 = this.m21 * 1
+        this.m22 = this.m22 * 1
+        this.m23 = this.m23 * 1
+
+        return this
+    }
+
     fun scale(vec: Vector3f): Matrix {
         this.m00 = this.m00 * vec.x
         this.m01 = this.m01 * vec.x
@@ -635,6 +652,18 @@ class Matrix {
         this.m31 += src.m01 * vec.x + src.m11 * vec.y
         this.m32 += src.m02 * vec.x + src.m12 * vec.y
         this.m33 += src.m03 * vec.x + src.m13 * vec.y
+
+        return this
+    }
+
+    fun translate(x: Float, y: Float): Matrix {
+        val src = Matrix()
+        load(this, src)
+
+        this.m30 += src.m00 * x + src.m10 * y
+        this.m31 += src.m01 * x + src.m11 * y
+        this.m32 += src.m02 * x + src.m12 * y
+        this.m33 += src.m03 * x + src.m13 * y
 
         return this
     }
