@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL30.*
 
 class Model {
 
+    var name = "unnamed"
+
     companion object {
         private val vertexShader = Shader(GL_VERTEX_SHADER, "/shaders/model.vert")
         private val fragmentShader = Shader(GL_FRAGMENT_SHADER, "/shaders/model.frag")
@@ -151,7 +153,7 @@ class Model {
         indices = indexArray.toIntArray()
     }
 
-    private fun updateModel() {
+    fun updateModel() {
         calculateVertexArray()
         calculateIndexArray()
         generateVAO()

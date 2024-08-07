@@ -43,3 +43,6 @@ bin/
 
 ### JVM ###
 hs_err_pid*
+
+### Export ###
+sve export
