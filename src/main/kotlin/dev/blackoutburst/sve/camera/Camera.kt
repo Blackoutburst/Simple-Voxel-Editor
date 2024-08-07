@@ -20,6 +20,7 @@ object Camera {
     var rotation = Vector2f(45f, 30f)
 
     var view = Matrix().translate(position)
+    var projection = Matrix().projectionMatrix(90f, 1000f, 0.1f)
 
     val direction: Vector3f
         get() {
@@ -35,9 +36,9 @@ object Camera {
 
     fun update() {
         if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_R)) {
-            position = Vector3f(0f, 0f, 5f)
-            positionOffset = Vector3f(0f, 0f, 0f)
-            rotation = Vector2f(45f, 30f)
+            position.set(0f, 0f, 5f)
+            positionOffset.set(0f, 0f, 0f)
+            rotation.set(45f, 30f)
         }
 
         val mousePosition = Mouse.position
@@ -53,10 +54,10 @@ object Camera {
         move(xOffset, yOffset)
 
         view.setIdentity()
-            .translate(Vector3f(0f, 0f, -position.z))
-            .rotate(Math.toRadians(rotation.y.toDouble()).toFloat(), Vector3f(1f, 0f, 0f))
-            .rotate(Math.toRadians(rotation.x.toDouble()).toFloat(), Vector3f(0f, 1f, 0f))
-            .translate(Vector3f(-position.x + positionOffset.x, -position.y + positionOffset.y, positionOffset.z))
+            .translate(0f, 0f, -position.z)
+            .rotate(Math.toRadians(rotation.y.toDouble()).toFloat(), 1f, 0f, 0f)
+            .rotate(Math.toRadians(rotation.x.toDouble()).toFloat(), 0f, 1f, 0f)
+            .translate(-position.x + positionOffset.x, -position.y + positionOffset.y, positionOffset.z)
 
     }
 

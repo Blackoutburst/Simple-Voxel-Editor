@@ -528,6 +528,55 @@ class Matrix {
         return (this)
     }
 
+    fun rotate(angle: Float, x: Float, y: Float, z: Float): Matrix {
+        val src = Matrix()
+        load(this, src)
+
+        val c = cos(angle.toDouble()).toFloat()
+        val s = sin(angle.toDouble()).toFloat()
+        val oneminusc = 1.0f - c
+        val xy = x * y
+        val yz = y * z
+        val xz = x * z
+        val xs = x * s
+        val ys = y * s
+        val zs = z * s
+
+        val f00 = x * x * oneminusc + c
+        val f01 = xy * oneminusc + zs
+        val f02 = xz * oneminusc - ys
+        // n[3] not used
+        val f10 = xy * oneminusc - zs
+        val f11 = y * y * oneminusc + c
+        val f12 = yz * oneminusc + xs
+        // n[7] not used
+        val f20 = xz * oneminusc + ys
+        val f21 = yz * oneminusc - xs
+        val f22 = z * z * oneminusc + c
+
+        val t00 = src.m00 * f00 + src.m10 * f01 + src.m20 * f02
+        val t01 = src.m01 * f00 + src.m11 * f01 + src.m21 * f02
+        val t02 = src.m02 * f00 + src.m12 * f01 + src.m22 * f02
+        val t03 = src.m03 * f00 + src.m13 * f01 + src.m23 * f02
+        val t10 = src.m00 * f10 + src.m10 * f11 + src.m20 * f12
+        val t11 = src.m01 * f10 + src.m11 * f11 + src.m21 * f12
+        val t12 = src.m02 * f10 + src.m12 * f11 + src.m22 * f12
+        val t13 = src.m03 * f10 + src.m13 * f11 + src.m23 * f12
+        this.m20 = src.m00 * f20 + src.m10 * f21 + src.m20 * f22
+        this.m21 = src.m01 * f20 + src.m11 * f21 + src.m21 * f22
+        this.m22 = src.m02 * f20 + src.m12 * f21 + src.m22 * f22
+        this.m23 = src.m03 * f20 + src.m13 * f21 + src.m23 * f22
+        this.m00 = t00
+        this.m01 = t01
+        this.m02 = t02
+        this.m03 = t03
+        this.m10 = t10
+        this.m11 = t11
+        this.m12 = t12
+        this.m13 = t13
+
+        return (this)
+    }
 
     fun rotate(angle: Float) {
         val src = Matrix()
@@ -598,6 +647,18 @@ class Matrix {
         this.m31 += src.m01 * vec.x + src.m11 * vec.y + src.m21 * vec.z
         this.m32 += src.m02 * vec.x + src.m12 * vec.y + src.m22 * vec.z
         this.m33 += src.m03 * vec.x + src.m13 * vec.y + src.m23 * vec.z
+
+        return (this)
+    }
+
+    fun translate(x: Float, y: Float, z: Float): Matrix {
+        val src = Matrix()
+        load(this, src)
+
+        this.m30 += src.m00 * x + src.m10 * y + src.m20 * z
+        this.m31 += src.m01 * x + src.m11 * y + src.m21 * z
+        this.m32 += src.m02 * x + src.m12 * y + src.m22 * z
+        this.m33 += src.m03 * x + src.m13 * y + src.m23 * z
 
         return (this)
     }

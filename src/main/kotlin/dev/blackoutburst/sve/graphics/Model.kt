@@ -1,7 +1,6 @@
 package dev.blackoutburst.sve.graphics
 
 import dev.blackoutburst.sve.camera.Camera
-import dev.blackoutburst.sve.maths.Matrix
 import dev.blackoutburst.sve.maths.Vector3f
 import dev.blackoutburst.sve.shader.Shader
 import dev.blackoutburst.sve.shader.ShaderProgram
@@ -19,12 +18,14 @@ class Model {
 
     val voxels = mutableListOf(Voxel(Vector3f(0f), Color.LIGHT_GRAY))
 
-    var vaoId = 0
-    var vboId = 0
-    var eboId = 0
+    private var vaoId = 0
+    private var vboId = 0
+    private var eboId = 0
 
-    var vertices = floatArrayOf()
-    var indices = intArrayOf()
+    private var vertices: FloatArray? = null
+    private var indices: IntArray? = null
+
+    private var indexCount = 0
 
     init {
         vaoId = glGenVertexArrays()
@@ -35,19 +36,18 @@ class Model {
     }
 
     private fun generateVAO() {
-
         stack(128 * 1024) { stack ->
             glBindVertexArray(vaoId)
 
             // VBO
             glBindBuffer(GL_ARRAY_BUFFER, vboId)
-            val vertexBuffer = stack.mallocFloat(vertices.size)
+            val vertexBuffer = stack.mallocFloat(vertices?.size ?: 0)
             vertexBuffer.put(vertices).flip()
             glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW)
 
             // EBO
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId)
-            val indexBuffer = stack.mallocInt(indices.size)
+            val indexBuffer = stack.mallocInt(indices?.size ?: 0)
             indexBuffer.put(indices).flip()
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW)
 
@@ -64,6 +64,11 @@ class Model {
             glEnableVertexAttribArray(2)
             glVertexAttribPointer(2, 1, GL_FLOAT, false, 32, 28)
         }
+
+        indexCount = indices?.size ?: 0
+
+        vertices = null
+        indices = null
     }
 
     private fun calculateVertexArray() {
@@ -163,12 +168,12 @@ class Model {
     }
 
     fun render() {
+        glBindVertexArray(vaoId)
         glUseProgram(shaderProgram.id)
         shaderProgram.setUniform3f("viewPos", Camera.position)
-        shaderProgram.setUniformMat4("model", Matrix())
         shaderProgram.setUniformMat4("view", Camera.view)
-        shaderProgram.setUniformMat4("projection", Matrix().projectionMatrix(90f, 1000f, 0.1f))
+        shaderProgram.setUniformMat4("projection", Camera.projection)
 
-        glDrawElements(GL_TRIANGLES, indices.size, GL_UNSIGNED_INT, 0)
+        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0)
     }
 }
