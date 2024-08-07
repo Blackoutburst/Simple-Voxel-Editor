@@ -16,6 +16,8 @@ object LeftPanel {
     fun update() {
         clicked = (Mouse.isButtonDown(Mouse.LEFT_BUTTON) || Mouse.isButtonDown(Mouse.RIGHT_BUTTON)) && Mouse.position.x <= 200f && visible
 
+        background.height = Window.height.toFloat()
+
         if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_P))
             visible = !visible
     }

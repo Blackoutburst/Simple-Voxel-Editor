@@ -8,7 +8,7 @@ import dev.blackoutburst.sve.utils.Color
 import dev.blackoutburst.sve.utils.stack
 import org.lwjgl.opengl.GL30.*
 
-class ColoredBox(val x: Float, val y: Float, val width: Float, val height: Float, var color: Color) {
+class ColoredBox(var x: Float, var y: Float, var width: Float, var height: Float, var color: Color) {
     private val vertices = floatArrayOf(
         0f, 0f, 0f, 0f,
         1f, 1f, 1f, 1f,
