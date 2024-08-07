@@ -17,7 +17,7 @@ class Model {
         private val shaderProgram = ShaderProgram(vertexShader, fragmentShader)
     }
 
-    val voxels = mutableListOf(Voxel(Vector3f(0f), Color.WHITE))
+    val voxels = mutableListOf(Voxel(Vector3f(0f), Color.LIGHT_GRAY))
 
     var vaoId = 0
     var vboId = 0
@@ -70,40 +70,40 @@ class Model {
         val vertexArray = mutableListOf<Float>()
         voxels.forEach {
             // TOP
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 1f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 1f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 1f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 1f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + 0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + 0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + 0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + 0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 0f))
 
             // FRONT
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 0f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 0f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 1f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 1f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + -0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + -0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + 0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + 0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 1f))
 
             // BACK
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 0f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 0f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 1f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 1f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + -0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + -0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + 0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + 0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 2f))
 
             // LEFT
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 0f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 1f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 1f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 0f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + -0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + 0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + 0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + -0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 3f))
 
             // RIGHT
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 0f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 1f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 1f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 0f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + -0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + 0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + 0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + -0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 4f))
 
             // BOTTOM
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 0f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 0f, it.position.z + 0f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
-            vertexArray.addAll(listOf(it.position.x + 1f, it.position.y + 0f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
-            vertexArray.addAll(listOf(it.position.x + 0f, it.position.y + 0f, it.position.z + 1f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + -0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + -0.5f, it.position.z + -0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
+            vertexArray.addAll(listOf(it.position.x + 0.5f, it.position.y + -0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
+            vertexArray.addAll(listOf(it.position.x + -0.5f, it.position.y + -0.5f, it.position.z + 0.5f, it.color.r, it.color.g, it.color.b, it.color.a, 5f))
         }
 
         vertices = vertexArray.toFloatArray()

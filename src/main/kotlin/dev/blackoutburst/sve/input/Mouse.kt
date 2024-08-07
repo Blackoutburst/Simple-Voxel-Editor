@@ -23,6 +23,7 @@ object Mouse {
 				buttons[key] = DOWN
 			}
 		}
+		scroll = 0f
 	}
 
 	fun isButtonPressed(button: Int): Boolean {

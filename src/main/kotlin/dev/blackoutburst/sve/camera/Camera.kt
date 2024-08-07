@@ -1,26 +1,22 @@
 package dev.blackoutburst.sve.camera
 
-import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.input.Mouse
 import dev.blackoutburst.sve.maths.Matrix
 import dev.blackoutburst.sve.maths.Vector2f
 import dev.blackoutburst.sve.maths.Vector3f
-import dev.blackoutburst.sve.utils.Time
-import org.lwjgl.glfw.GLFW
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 object Camera {
-    private var velocity = Vector3f()
-    private var moving = false
-    private var sprint = false
-    private val runSpeed = 50f
-    private val walkSpeed = 10f
     private var lastMousePosition = Mouse.position
-    private val sensitivity = 0.1f
+    private val sensitivity = 0.2f
 
-    var position = Vector3f()
-    var rotation = Vector2f()
+    var position = Vector3f(0f, 0f, 5f)
+
+    var positionOffset = Vector3f(0f, 0f, 0f)
+
+    var rotation = Vector2f(45f, 30f)
 
     var view = Matrix().translate(position)
 
@@ -37,25 +33,28 @@ object Camera {
         }
 
     fun update() {
-        rotate()
-        move()
-
-        view.setIdentity()
-            .rotate(Math.toRadians(rotation.y.toDouble()).toFloat(), Vector3f(1f, 0f, 0f))
-            .rotate(Math.toRadians(rotation.x.toDouble()).toFloat(), Vector3f(0f, 1f, 0f))
-            .translate(Vector3f(-position.x, -position.y, -position.z))
-    }
-
-    private fun rotate() {
         val mousePosition = Mouse.position
 
         var xOffset = mousePosition.x - lastMousePosition.x
         var yOffset = mousePosition.y - lastMousePosition.y
+        xOffset *= sensitivity
+        yOffset *= sensitivity
 
         lastMousePosition = mousePosition.copy()
 
-        xOffset *= sensitivity
-        yOffset *= sensitivity
+        rotate(xOffset, yOffset)
+        move(xOffset, yOffset)
+
+        view.setIdentity()
+            .translate(Vector3f(0f, 0f, -position.z))
+            .rotate(Math.toRadians(rotation.y.toDouble()).toFloat(), Vector3f(1f, 0f, 0f))
+            .rotate(Math.toRadians(rotation.x.toDouble()).toFloat(), Vector3f(0f, 1f, 0f))
+            .translate(Vector3f(-position.x + positionOffset.x, -position.y + positionOffset.y, positionOffset.z))
+
+    }
+
+    private fun rotate(xOffset: Float, yOffset: Float) {
+        if (!Mouse.isButtonDown(Mouse.LEFT_BUTTON)) return
 
         rotation.x += xOffset
         rotation.y += yOffset
@@ -64,63 +63,15 @@ object Camera {
         if (rotation.y < -89.0f) rotation.y = -89.0f
     }
 
-    private fun move() {
-        moving = false
+    private fun move(xOffset: Float, yOffset: Float) {
+        position.z -= Mouse.scroll / 2f
 
-        if ((Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))) {
-            sprint = true
-        }
+        if (!Mouse.isButtonDown(Mouse.RIGHT_BUTTON)) return
 
-        if ((Keyboard.isKeyDown(GLFW.GLFW_KEY_W))) {
-            velocity.x -= sin(-rotation.x * Math.PI / 180).toFloat()
-            velocity.z -= cos(-rotation.x * Math.PI / 180).toFloat()
-            moving = true
-        }
+        positionOffset.x += cos(-rotation.x * Math.PI / 180).toFloat() * xOffset / 50f
+        positionOffset.z -= sin(-rotation.x * Math.PI / 180).toFloat() * xOffset / 50f
 
-        if ((Keyboard.isKeyDown(GLFW.GLFW_KEY_S))) {
-            velocity.x += sin(-rotation.x * Math.PI / 180).toFloat()
-            velocity.z += cos(-rotation.x * Math.PI / 180).toFloat()
-            moving = true
-        }
+        positionOffset.y -= yOffset / 50f
 
-        if ((Keyboard.isKeyDown(GLFW.GLFW_KEY_A))) {
-            velocity.x += sin((-rotation.x - 90) * Math.PI / 180).toFloat()
-            velocity.z += cos((-rotation.x - 90) * Math.PI / 180).toFloat()
-            moving = true
-        }
-
-        if ((Keyboard.isKeyDown(GLFW.GLFW_KEY_D))) {
-            velocity.x += sin((-rotation.x + 90) * Math.PI / 180).toFloat()
-            velocity.z += cos((-rotation.x + 90) * Math.PI / 180).toFloat()
-            moving = true
-        }
-
-        if (Keyboard.isKeyDown(GLFW.GLFW_KEY_SPACE)) {
-            velocity.y += 1
-            moving = true
-        }
-
-        if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            velocity.y -= 1
-            moving = true
-        }
-
-        val speed = if (sprint) runSpeed else walkSpeed
-
-
-        if (moving) {
-            val horizontalVelocity = Vector3f(velocity.x, 0f, velocity.z)
-
-            velocity.x = horizontalVelocity.normalize().x
-            velocity.z = horizontalVelocity.normalize().z
-        } else {
-            sprint = false
-        }
-
-        position.x += velocity.x * Time.delta.toFloat() * speed
-        position.y += velocity.y * Time.delta.toFloat() * speed
-        position.z += velocity.z * Time.delta.toFloat() * speed
-
-        velocity.zero()
     }
 }
