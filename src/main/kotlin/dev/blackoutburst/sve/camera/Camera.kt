@@ -1,10 +1,11 @@
 package dev.blackoutburst.sve.camera
 
+import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.input.Mouse
 import dev.blackoutburst.sve.maths.Matrix
 import dev.blackoutburst.sve.maths.Vector2f
 import dev.blackoutburst.sve.maths.Vector3f
-import kotlin.math.abs
+import org.lwjgl.glfw.GLFW
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -33,6 +34,12 @@ object Camera {
         }
 
     fun update() {
+        if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_R)) {
+            position = Vector3f(0f, 0f, 5f)
+            positionOffset = Vector3f(0f, 0f, 0f)
+            rotation = Vector2f(45f, 30f)
+        }
+
         val mousePosition = Mouse.position
 
         var xOffset = mousePosition.x - lastMousePosition.x
