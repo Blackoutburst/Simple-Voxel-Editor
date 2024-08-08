@@ -93,9 +93,7 @@ object Camera {
         if (Mouse.isButtonPressed(Mouse.LEFT_BUTTON)) {
             val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
-                result.face?.let { f ->
-                    Main.model!!.removeVoxel(b)
-                }
+                Main.model!!.removeVoxel(b)
             }
         }
 
@@ -103,8 +101,15 @@ object Camera {
             val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
                 result.face?.let { f ->
-                    Main.model!!.addVoxel(Voxel(b.position + f.toFloat(), Color.GRAY))
+                    Main.model!!.addVoxel(Voxel(b.position + f.toFloat(), Main.color))
                 }
+            }
+        }
+
+        if (Mouse.isButtonPressed(Mouse.MIDDLE_BUTTON)) {
+            val result = dda(getSpacePosition(), ray, 50)
+            result.block?.let { b ->
+                Main.color = b.color.copy()
             }
         }
     }

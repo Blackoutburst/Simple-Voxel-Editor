@@ -96,6 +96,8 @@ class Color {
         return (this)
     }
 
+    fun copy(): Color = Color(this.r, this.g, this.b, this.a)
+
     fun div(c: Color): Color {
         if (c.r != 0f) r /= c.r
         if (c.g != 0f) g /= c.g
