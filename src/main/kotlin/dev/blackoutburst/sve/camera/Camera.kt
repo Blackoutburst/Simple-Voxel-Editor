@@ -1,14 +1,23 @@
 package dev.blackoutburst.sve.camera
 
+import dev.blackoutburst.sve.graphics.Text
+import dev.blackoutburst.sve.Main
+import dev.blackoutburst.sve.graphics.Voxel
 import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.input.Mouse
 import dev.blackoutburst.sve.maths.Matrix
 import dev.blackoutburst.sve.maths.Vector2f
 import dev.blackoutburst.sve.maths.Vector3f
+import dev.blackoutburst.sve.maths.Vector3i
 import dev.blackoutburst.sve.ui.LeftPanel
+import dev.blackoutburst.sve.utils.Color
+import dev.blackoutburst.sve.utils.RayCastResult
 import dev.blackoutburst.sve.window.Window
 import org.lwjgl.glfw.GLFW
+import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.floor
+import kotlin.math.sign
 import kotlin.math.sin
 
 object Camera {
@@ -19,7 +28,7 @@ object Camera {
 
     var positionOffset = Vector3f(0f, 0f, 0f)
 
-    var rotation = Vector2f(45f, 30f)
+    var rotation = Vector2f(0f, 0f)
 
     var view = Matrix().translate(position)
     var projection = Matrix().projectionMatrix(90f, 1000f, 0.1f)
@@ -36,6 +45,12 @@ object Camera {
 
             return Vector3f(x, y, z).normalize()
         }
+
+    private fun getSpacePosition(): Vector3f = Vector3f(
+        view.m02 * -view.m32 - positionOffset.x,
+        view.m12 * -view.m32 - positionOffset.y,
+        view.m22 * -view.m32 - positionOffset.z,
+    )
 
     fun update() {
         if (LeftPanel.clicked) return
@@ -55,15 +70,38 @@ object Camera {
 
         lastMousePosition = mousePosition.copy()
 
-        rotate(xOffset, yOffset)
-        move(xOffset, yOffset)
+        if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            click()
+        } else {
+            rotate(xOffset, yOffset)
+            move(xOffset, yOffset)
+        }
 
         view.setIdentity()
             .translate(0f, 0f, -position.z)
             .rotate(Math.toRadians(rotation.y.toDouble()).toFloat(), 1f, 0f, 0f)
             .rotate(Math.toRadians(rotation.x.toDouble()).toFloat(), 0f, 1f, 0f)
             .translate(-position.x + positionOffset.x, -position.y + positionOffset.y, positionOffset.z)
+    }
 
+    private fun click() {
+        if (Mouse.isButtonPressed(Mouse.LEFT_BUTTON)) {
+            val result = dda(getSpacePosition(), direction, 50)
+            result.block?.let { b ->
+                result.face?.let { f ->
+                    Main.model!!.removeVoxel(b)
+                }
+            }
+        }
+
+        if (Mouse.isButtonPressed(Mouse.RIGHT_BUTTON)) {
+            val result = dda(getSpacePosition(), direction, 50)
+            result.block?.let { b ->
+                result.face?.let { f ->
+                    Main.model!!.addVoxel(Voxel(b.position + f.toFloat(), Color.GRAY))
+                }
+            }
+        }
     }
 
     private fun rotate(xOffset: Float, yOffset: Float) {
@@ -72,8 +110,8 @@ object Camera {
         rotation.x += xOffset
         rotation.y += yOffset
 
-        if (rotation.y > 89.0f) rotation.y = 89.0f
-        if (rotation.y < -89.0f) rotation.y = -89.0f
+        if (rotation.y > 90.0f) rotation.y = 90.0f
+        if (rotation.y < -90.0f) rotation.y = -90.0f
     }
 
     private fun move(xOffset: Float, yOffset: Float) {
@@ -87,4 +125,51 @@ object Camera {
         positionOffset.y -= yOffset / 50f
 
     }
+
+    fun dda(rayPos: Vector3f, rayDir: Vector3f, maxRaySteps: Int): RayCastResult {
+        val mapPos = Vector3i(floor(rayPos.x).toInt(), floor(rayPos.y).toInt(), floor(rayPos.z).toInt())
+        val rayDirLength = rayDir.length()
+        val deltaDist = Vector3f(abs(rayDirLength / rayDir.x), abs(rayDirLength / rayDir.y), abs(rayDirLength / rayDir.z))
+        val rayStep = Vector3i(sign(rayDir.x).toInt(), sign(rayDir.y).toInt(), sign(rayDir.z).toInt())
+        val signRayDir = Vector3f(sign(rayDir.x), sign(rayDir.y), sign(rayDir.z))
+        val mapPosVec3 = Vector3f(mapPos.x.toFloat(), mapPos.y.toFloat(), mapPos.z.toFloat())
+        val sideDist = (signRayDir * (mapPosVec3 - rayPos) + (signRayDir * 0.5f) + 0.5f) * deltaDist
+        var mask = Vector3i()
+
+        for (i in 0 until maxRaySteps) {
+            val block = getVoxelAt(mapPos)
+            if (block != null) return RayCastResult(block, mask)
+
+            if (sideDist.x < sideDist.y) {
+                if (sideDist.x < sideDist.z) {
+                    sideDist.x += deltaDist.x
+                    mapPos.x += rayStep.x
+                    mask = Vector3i(-rayStep.x, 0, 0)
+                } else {
+                    sideDist.z += deltaDist.z
+                    mapPos.z += rayStep.z
+                    mask = Vector3i(0, 0, -rayStep.z)
+                }
+            } else {
+                if (sideDist.y < sideDist.z) {
+                    sideDist.y += deltaDist.y
+                    mapPos.y += rayStep.y
+                    mask = Vector3i(0, -rayStep.y, 0)
+                } else {
+                    sideDist.z += deltaDist.z
+                    mapPos.z += rayStep.z
+                    mask = Vector3i(0, 0, -rayStep.z)
+                }
+            }
+        }
+
+        return RayCastResult(null, mask)
+    }
+
+    fun getVoxelAt(position: Vector3i): Voxel? =
+        Main.model!!.voxels.find {
+            it.position.x == position.x.toFloat() &&
+            it.position.y == position.y.toFloat() &&
+            it.position.z == position.z.toFloat()
+        }
 }

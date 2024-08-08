@@ -47,6 +47,16 @@ class Matrix {
         this.m33 = matrix.m33
     }
 
+    fun mul(vec: Vector4f): Vector4f {
+        val newVec = Vector4f()
+        newVec.x = this.m00 * vec.x + this.m01 * vec.y + this.m02 * vec.z + this.m03 * vec.w
+        newVec.y = this.m10 * vec.x + this.m11 * vec.y + this.m12 * vec.z + this.m13 * vec.w
+        newVec.z = this.m20 * vec.x + this.m21 * vec.y + this.m22 * vec.z + this.m23 * vec.w
+        newVec.w = this.m30 * vec.x + this.m31 * vec.y + this.m32 * vec.z + this.m33 * vec.w
+
+        return newVec
+    }
+
     fun get(index: Int): Float {
         val elements = floatArrayOf(
             this.m00, this.m01, this.m02, this.m03,

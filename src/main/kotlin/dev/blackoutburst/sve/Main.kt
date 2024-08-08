@@ -1,22 +1,27 @@
 package dev.blackoutburst.sve
 
+import dev.blackoutburst.sve.Main.model
 import dev.blackoutburst.sve.Main.queue
 import dev.blackoutburst.sve.camera.Camera
+import dev.blackoutburst.sve.camera.Camera.view
 import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.files.FileExplorer
 import dev.blackoutburst.sve.graphics.Axys
 import dev.blackoutburst.sve.graphics.Grid
 import dev.blackoutburst.sve.graphics.Model
 import dev.blackoutburst.sve.io.SVEFiles
+import dev.blackoutburst.sve.ui.Cursor
 import dev.blackoutburst.sve.ui.LeftPanel
 import dev.blackoutburst.sve.window.Window
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import dev.blackoutburst.sve.utils.main
+import dev.blackoutburst.sve.graphics.Text
 
 
 object Main {
+    var model: Model? = null
     val queue: ConcurrentLinkedQueue<() -> Unit> = ConcurrentLinkedQueue()
 }
 
@@ -26,9 +31,9 @@ fun main() {
 }
 
 fun update() {
-    var model = Model()
+    model = Model()
 
-    SVEFiles.export(model)
+    SVEFiles.export(model!!)
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glEnable(GL_BLEND)
@@ -52,11 +57,20 @@ fun update() {
         Axys.render()
         Grid.render()
 
-        model.render()
+        model!!.render()
 
         glDisable(GL_DEPTH_TEST)
         LeftPanel.render()
 
+            /*
+        Text(0f, 90f, 24f, view.toString().split("\n")[0]).render()
+        Text(0f, 60f, 24f, view.toString().split("\n")[1]).render()
+        Text(0f, 30f, 24f, view.toString().split("\n")[2]).render()
+        Text(0f, 0f, 24f, view.toString().split("\n")[3]).render()
+
+             */
+
+        Cursor.render()
         Window.update()
     }
 

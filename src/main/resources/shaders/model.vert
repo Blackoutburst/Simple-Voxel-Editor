@@ -24,7 +24,7 @@ vec3 getNormal(int index) {
 }
 
 void main() {
-    FragPos = aPos;
+    FragPos = aPos + 0.5;
     Color = aColor;
     Normal = getNormal(int(aNorm));
 

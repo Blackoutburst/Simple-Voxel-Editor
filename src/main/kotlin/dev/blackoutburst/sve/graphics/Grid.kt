@@ -38,13 +38,13 @@ object Grid {
         val vertexArray = mutableListOf<Float>()
         val indexArray = mutableListOf<Int>()
 
-        for (x in -size.toInt() until size.toInt()) {
+        for (x in -size.toInt() .. size.toInt()) {
             vertexArray.addAll(listOf(x.toFloat(), 0f, -size, 0.2f, 0.2f, 0.2f, 1f))
             indexArray.add(vertexArray.size / 7 - 1)
             vertexArray.addAll(listOf(x.toFloat(), 0f, size, 0.2f, 0.2f, 0.2f, 1f))
             indexArray.add(vertexArray.size / 7 - 1)
         }
-        for (z in -size.toInt() until size.toInt()) {
+        for (z in -size.toInt() .. size.toInt()) {
             vertexArray.addAll(listOf(-size, 0f, z.toFloat(), 0.2f, 0.2f, 0.2f, 1f))
             indexArray.add(vertexArray.size / 7 - 1)
             vertexArray.addAll(listOf(size, 0f, z.toFloat(), 0.2f, 0.2f, 0.2f, 1f))

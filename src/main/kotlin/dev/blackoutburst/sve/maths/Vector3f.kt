@@ -73,6 +73,7 @@ class Vector3f {
     }
 
     fun toInt(): Vector3i = Vector3i(round(this.x).toInt(), round(this.y).toInt(), round(this.z).toInt())
+    fun toIntBad(): Vector3i = Vector3i(this.x.toInt(), this.y.toInt(), this.z.toInt())
 
     fun copy(): Vector3f {
         val newVector = Vector3f()
