@@ -110,6 +110,19 @@ class Color {
         return (this)
     }
 
+    override fun toString(): String {
+        return "[$r, $g, $b, $a]"
+    }
+
+    fun mix(color: Color, factor: Float): Color {
+        return Color(
+            r = this.r * (1 - factor) + color.r * factor,
+            g = this.g * (1 - factor) + color.g * factor,
+            b = this.b * (1 - factor) + color.b * factor,
+            a = this.a * (1 - factor) + color.a * factor
+        )
+    }
+
     companion object {
         val WHITE: Color = Color(1.0f)
         val BLACK: Color = Color(0.0f)
@@ -126,5 +139,23 @@ class Color {
         val LIGHT_BLUE: Color = Color(0.0f, 0.5f, 1.0f)
         val PURPLE: Color = Color(0.5f, 0.0f, 1.0f, 1.0f)
         val TRANSPARENT: Color = Color(0.0f, 0.0f, 0.0f, 0.0f)
+
+        fun hueToRGB(hue: Float): Color {
+            val h = (hue / 360.0).toFloat() % 1.0f
+            val s = 1.0f
+            val l = 0.5f
+
+            fun f(n: Float): Float {
+                val k = (n + h * 12) % 12
+                val a = s * Math.min(l, 1 - l)
+                return (l - a * Math.max(Math.min(Math.min(k - 3, 9 - k), 1.0f), -1.0f)).toFloat()
+            }
+
+            val r = f(0f)
+            val g = f(8f)
+            val b = f(4f)
+
+            return Color(r, g, b)
+        }
     }
 }

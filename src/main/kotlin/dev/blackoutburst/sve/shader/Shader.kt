@@ -10,7 +10,10 @@ class Shader(shaderType: Int, filePath: String) {
 
     init {
         val shaderSource = StringBuilder()
-        val stream = Shader::class.java.getResourceAsStream(filePath) ?: exitProcess(-2)
+        val stream = Shader::class.java.getResourceAsStream(filePath) ?: run {
+            println("File: $filePath not found")
+            exitProcess(-2)
+        }
 
         val reader = BufferedReader(InputStreamReader(stream))
         var line: String?

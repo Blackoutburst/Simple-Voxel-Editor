@@ -75,11 +75,13 @@ object Camera {
 
         lastMousePosition = mousePosition.copy()
 
+
+        position.z -= Mouse.scroll / 2f
         if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            click()
-        } else {
             rotate(xOffset, yOffset)
             move(xOffset, yOffset)
+        } else {
+            click()
         }
 
         view.setIdentity()
@@ -101,7 +103,7 @@ object Camera {
             val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
                 result.face?.let { f ->
-                    Main.model!!.addVoxel(Voxel(b.position + f.toFloat(), Main.color))
+                    Main.model!!.addVoxel(Voxel(b.position + f.toFloat(), LeftPanel.selectedColor))
                 }
             }
         }
@@ -109,7 +111,7 @@ object Camera {
         if (Mouse.isButtonPressed(Mouse.MIDDLE_BUTTON)) {
             val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
-                Main.color = b.color.copy()
+                LeftPanel.selectedColor = b.color.copy()
             }
         }
     }
@@ -125,8 +127,6 @@ object Camera {
     }
 
     private fun move(xOffset: Float, yOffset: Float) {
-        position.z -= Mouse.scroll / 2f
-
         if (!Mouse.isButtonDown(Mouse.RIGHT_BUTTON)) return
 
         positionOffset.x += cos(-rotation.x * Math.PI / 180).toFloat() * xOffset / 20f

@@ -21,7 +21,6 @@ import dev.blackoutburst.sve.utils.main
 import java.io.File
 
 object Main {
-    var color = Color.GRAY
     var model: Model? = null
     val queue: ConcurrentLinkedQueue<() -> Unit> = ConcurrentLinkedQueue()
 }
