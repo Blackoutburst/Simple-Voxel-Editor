@@ -290,6 +290,31 @@ class Matrix {
         return negate(this, dest)
     }
 
+    fun copy(): Matrix {
+        val newMatrix = Matrix()
+        newMatrix.m00 = this.m00
+        newMatrix.m01 = this.m01
+        newMatrix.m02 = this.m02
+        newMatrix.m03 = this.m03
+
+        newMatrix.m10 = this.m10
+        newMatrix.m11 = this.m11
+        newMatrix.m12 = this.m12
+        newMatrix.m13 = this.m13
+
+        newMatrix.m20 = this.m20
+        newMatrix.m21 = this.m21
+        newMatrix.m22 = this.m22
+        newMatrix.m23 = this.m23
+
+        newMatrix.m30 = this.m30
+        newMatrix.m31 = this.m31
+        newMatrix.m32 = this.m32
+        newMatrix.m33 = this.m33
+
+        return (newMatrix)
+    }
+
     fun getValues(): FloatArray {
         return (floatArrayOf(
             this.m00, this.m01, this.m02, this.m03,
@@ -297,6 +322,15 @@ class Matrix {
             this.m20, this.m21, this.m22, this.m23,
             this.m30, this.m31, this.m32, this.m33
         ))
+    }
+
+    fun transform(right: Vector4f): Vector4f {
+        val x = this.m00 * right.x + this.m10 * right.y + this.m20 * right.z + this.m30 * right.w
+        val y = this.m01 * right.x + this.m11 * right.y + this.m21 * right.z + this.m31 * right.w
+        val z = this.m02 * right.x + this.m12 * right.y + this.m22 * right.z + this.m32 * right.w
+        val w = this.m03 * right.x + this.m13 * right.y + this.m23 * right.z + this.m33 * right.w
+
+        return Vector4f(x, y, z, w)
     }
 
     fun setIdentity(): Matrix {
@@ -762,77 +796,67 @@ class Matrix {
         return t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22) + t02 * (t10 * t21 - t11 * t20)
     }
 
-    @JvmOverloads
-    fun invert(src: Matrix = this, dest: Matrix? = this): Matrix? {
-        var dest = dest
+    fun invert(): Matrix {
+        val src = Matrix()
+        load(this, src)
+
         val determinant = src.determinant()
+        val determinant_inv = 1f / determinant
 
-        if (determinant != 0f) {
-            /*
-         * m00 m01 m02 m03
-         * m10 m11 m12 m13
-         * m20 m21 m22 m23
-         * m30 m31 m32 m33
-         */
-            if (dest == null) dest = Matrix()
-            val determinant_inv = 1f / determinant
+        // first row
+        val t00 =
+            determinant3x3(src.m11, src.m12, src.m13, src.m21, src.m22, src.m23, src.m31, src.m32, src.m33)
+        val t01 =
+            -determinant3x3(src.m10, src.m12, src.m13, src.m20, src.m22, src.m23, src.m30, src.m32, src.m33)
+        val t02 =
+            determinant3x3(src.m10, src.m11, src.m13, src.m20, src.m21, src.m23, src.m30, src.m31, src.m33)
+        val t03 =
+            -determinant3x3(src.m10, src.m11, src.m12, src.m20, src.m21, src.m22, src.m30, src.m31, src.m32)
+        // second row
+        val t10 =
+            -determinant3x3(src.m01, src.m02, src.m03, src.m21, src.m22, src.m23, src.m31, src.m32, src.m33)
+        val t11 =
+            determinant3x3(src.m00, src.m02, src.m03, src.m20, src.m22, src.m23, src.m30, src.m32, src.m33)
+        val t12 =
+            -determinant3x3(src.m00, src.m01, src.m03, src.m20, src.m21, src.m23, src.m30, src.m31, src.m33)
+        val t13 =
+            determinant3x3(src.m00, src.m01, src.m02, src.m20, src.m21, src.m22, src.m30, src.m31, src.m32)
+        // third row
+        val t20 =
+            determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m31, src.m32, src.m33)
+        val t21 =
+            -determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m30, src.m32, src.m33)
+        val t22 =
+            determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m30, src.m31, src.m33)
+        val t23 =
+            -determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m30, src.m31, src.m32)
+        // fourth row
+        val t30 =
+            -determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m21, src.m22, src.m23)
+        val t31 =
+            determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m20, src.m22, src.m23)
+        val t32 =
+            -determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m20, src.m21, src.m23)
+        val t33 =
+            determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m20, src.m21, src.m22)
 
-            // first row
-            val t00 =
-                determinant3x3(src.m11, src.m12, src.m13, src.m21, src.m22, src.m23, src.m31, src.m32, src.m33)
-            val t01 =
-                -determinant3x3(src.m10, src.m12, src.m13, src.m20, src.m22, src.m23, src.m30, src.m32, src.m33)
-            val t02 =
-                determinant3x3(src.m10, src.m11, src.m13, src.m20, src.m21, src.m23, src.m30, src.m31, src.m33)
-            val t03 =
-                -determinant3x3(src.m10, src.m11, src.m12, src.m20, src.m21, src.m22, src.m30, src.m31, src.m32)
-            // second row
-            val t10 =
-                -determinant3x3(src.m01, src.m02, src.m03, src.m21, src.m22, src.m23, src.m31, src.m32, src.m33)
-            val t11 =
-                determinant3x3(src.m00, src.m02, src.m03, src.m20, src.m22, src.m23, src.m30, src.m32, src.m33)
-            val t12 =
-                -determinant3x3(src.m00, src.m01, src.m03, src.m20, src.m21, src.m23, src.m30, src.m31, src.m33)
-            val t13 =
-                determinant3x3(src.m00, src.m01, src.m02, src.m20, src.m21, src.m22, src.m30, src.m31, src.m32)
-            // third row
-            val t20 =
-                determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m31, src.m32, src.m33)
-            val t21 =
-                -determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m30, src.m32, src.m33)
-            val t22 =
-                determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m30, src.m31, src.m33)
-            val t23 =
-                -determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m30, src.m31, src.m32)
-            // fourth row
-            val t30 =
-                -determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m21, src.m22, src.m23)
-            val t31 =
-                determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m20, src.m22, src.m23)
-            val t32 =
-                -determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m20, src.m21, src.m23)
-            val t33 =
-                determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m20, src.m21, src.m22)
-
-            // transpose and divide by the determinant
-            dest.m00 = t00 * determinant_inv
-            dest.m11 = t11 * determinant_inv
-            dest.m22 = t22 * determinant_inv
-            dest.m33 = t33 * determinant_inv
-            dest.m01 = t10 * determinant_inv
-            dest.m10 = t01 * determinant_inv
-            dest.m20 = t02 * determinant_inv
-            dest.m02 = t20 * determinant_inv
-            dest.m12 = t21 * determinant_inv
-            dest.m21 = t12 * determinant_inv
-            dest.m03 = t30 * determinant_inv
-            dest.m30 = t03 * determinant_inv
-            dest.m13 = t31 * determinant_inv
-            dest.m31 = t13 * determinant_inv
-            dest.m32 = t23 * determinant_inv
-            dest.m23 = t32 * determinant_inv
-            return dest
-        } else return null
+        this.m00 = t00 * determinant_inv
+        this.m11 = t11 * determinant_inv
+        this.m22 = t22 * determinant_inv
+        this.m33 = t33 * determinant_inv
+        this.m01 = t10 * determinant_inv
+        this.m10 = t01 * determinant_inv
+        this.m20 = t02 * determinant_inv
+        this.m02 = t20 * determinant_inv
+        this.m12 = t21 * determinant_inv
+        this.m21 = t12 * determinant_inv
+        this.m03 = t30 * determinant_inv
+        this.m30 = t03 * determinant_inv
+        this.m13 = t31 * determinant_inv
+        this.m31 = t13 * determinant_inv
+        this.m32 = t23 * determinant_inv
+        this.m23 = t32 * determinant_inv
+        return this
     }
 
     fun negate(src: Matrix, dest: Matrix?): Matrix {

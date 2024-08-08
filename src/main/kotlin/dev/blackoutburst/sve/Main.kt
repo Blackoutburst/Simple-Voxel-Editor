@@ -10,7 +10,6 @@ import dev.blackoutburst.sve.graphics.Axys
 import dev.blackoutburst.sve.graphics.Grid
 import dev.blackoutburst.sve.graphics.Model
 import dev.blackoutburst.sve.io.SVEFiles
-import dev.blackoutburst.sve.ui.Cursor
 import dev.blackoutburst.sve.ui.LeftPanel
 import dev.blackoutburst.sve.window.Window
 import org.lwjgl.glfw.GLFW
@@ -62,15 +61,6 @@ fun update() {
         glDisable(GL_DEPTH_TEST)
         LeftPanel.render()
 
-            /*
-        Text(0f, 90f, 24f, view.toString().split("\n")[0]).render()
-        Text(0f, 60f, 24f, view.toString().split("\n")[1]).render()
-        Text(0f, 30f, 24f, view.toString().split("\n")[2]).render()
-        Text(0f, 0f, 24f, view.toString().split("\n")[3]).render()
-
-             */
-
-        Cursor.render()
         Window.update()
     }
 

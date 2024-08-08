@@ -9,6 +9,7 @@ import dev.blackoutburst.sve.maths.Matrix
 import dev.blackoutburst.sve.maths.Vector2f
 import dev.blackoutburst.sve.maths.Vector3f
 import dev.blackoutburst.sve.maths.Vector3i
+import dev.blackoutburst.sve.maths.Vector4f
 import dev.blackoutburst.sve.ui.LeftPanel
 import dev.blackoutburst.sve.utils.Color
 import dev.blackoutburst.sve.utils.RayCastResult
@@ -34,16 +35,22 @@ object Camera {
     var projection = Matrix().projectionMatrix(90f, 1000f, 0.1f)
     var projection2D = Matrix().ortho2D(0f, Window.width.toFloat(), 0f, Window.height.toFloat(), -1f, 1f)
 
-    val direction: Vector3f
+    val ray: Vector3f
         get() {
-            val radianYaw = Math.toRadians(rotation.x.toDouble() - 90).toFloat()
-            val radianPitch = Math.toRadians(-rotation.y.toDouble()).toFloat()
+            val mouseXNDC = (2.0 * Mouse.position.x / Window.width) - 1.0
+            val mouseYNDC = 1.0 - (2.0 * Mouse.position.y / Window.height)
+            val rayClip = Vector4f(mouseXNDC.toFloat(), mouseYNDC.toFloat(), -1.0f, 1.0f)
 
-            val x = cos(radianPitch) * cos(radianYaw)
-            val y = sin(radianPitch)
-            val z = cos(radianPitch) * sin(radianYaw)
+            val inverseProjection = projection.copy().invert()
+            val inverseView = view.copy().invert()
 
-            return Vector3f(x, y, z).normalize()
+            val rayEye = inverseProjection.transform(rayClip)
+            rayEye.z = -1.0f
+            rayEye.w = 0.0f
+
+            val rayWorld = inverseView.transform(Vector4f(rayEye.x, rayEye.y, rayEye.z, rayEye.w))
+
+            return Vector3f(rayWorld.x, rayWorld.y, rayWorld.z).normalize()
         }
 
     private fun getSpacePosition(): Vector3f = Vector3f(
@@ -86,7 +93,7 @@ object Camera {
 
     private fun click() {
         if (Mouse.isButtonPressed(Mouse.LEFT_BUTTON)) {
-            val result = dda(getSpacePosition(), direction, 50)
+            val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
                 result.face?.let { f ->
                     Main.model!!.removeVoxel(b)
@@ -95,7 +102,7 @@ object Camera {
         }
 
         if (Mouse.isButtonPressed(Mouse.RIGHT_BUTTON)) {
-            val result = dda(getSpacePosition(), direction, 50)
+            val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
                 result.face?.let { f ->
                     Main.model!!.addVoxel(Voxel(b.position + f.toFloat(), Color.GRAY))
@@ -119,10 +126,10 @@ object Camera {
 
         if (!Mouse.isButtonDown(Mouse.RIGHT_BUTTON)) return
 
-        positionOffset.x += cos(-rotation.x * Math.PI / 180).toFloat() * xOffset / 50f
-        positionOffset.z -= sin(-rotation.x * Math.PI / 180).toFloat() * xOffset / 50f
+        positionOffset.x += cos(-rotation.x * Math.PI / 180).toFloat() * xOffset / 20f
+        positionOffset.z -= sin(-rotation.x * Math.PI / 180).toFloat() * xOffset / 20f
 
-        positionOffset.y -= yOffset / 50f
+        positionOffset.y -= yOffset / 20f
 
     }
 
