@@ -65,7 +65,7 @@ object Camera {
         if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_R)) {
             position.set(0f, 0f, 5f)
             positionOffset.set(0f, 0f, 0f)
-            rotation.set(45f, 30f)
+            rotation.set(40f, 30f)
         }
 
         val mousePosition = Mouse.position
@@ -77,6 +77,7 @@ object Camera {
 
         lastMousePosition = mousePosition.copy()
 
+        println(getSpacePosition())
         if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             click()
         } else {
