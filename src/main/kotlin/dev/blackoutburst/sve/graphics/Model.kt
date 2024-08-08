@@ -163,6 +163,8 @@ class Model {
     }
 
     fun removeVoxel(voxel: Voxel) {
+        if (voxels.size == 1) return
+
         voxels.remove(voxel)
         updateModel()
     }
