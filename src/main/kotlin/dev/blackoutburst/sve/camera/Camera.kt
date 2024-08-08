@@ -29,7 +29,7 @@ object Camera {
 
     var positionOffset = Vector3f(0f, 0f, 0f)
 
-    var rotation = Vector2f(0f, 0f)
+    var rotation = Vector2f(40f, 30f)
 
     var view = Matrix().translate(position)
     var projection = Matrix().projectionMatrix(90f, 1000f, 0.1f)
@@ -77,7 +77,6 @@ object Camera {
 
         lastMousePosition = mousePosition.copy()
 
-        println(getSpacePosition())
         if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             click()
         } else {

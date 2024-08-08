@@ -3,7 +3,6 @@ package dev.blackoutburst.sve
 import dev.blackoutburst.sve.Main.model
 import dev.blackoutburst.sve.Main.queue
 import dev.blackoutburst.sve.camera.Camera
-import dev.blackoutburst.sve.camera.Camera.view
 import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.files.FileExplorer
 import dev.blackoutburst.sve.graphics.Axys
