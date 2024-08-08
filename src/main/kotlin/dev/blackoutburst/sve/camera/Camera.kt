@@ -1,6 +1,5 @@
 package dev.blackoutburst.sve.camera
 
-import dev.blackoutburst.sve.graphics.Text
 import dev.blackoutburst.sve.Main
 import dev.blackoutburst.sve.graphics.Voxel
 import dev.blackoutburst.sve.input.Keyboard
@@ -53,11 +52,10 @@ object Camera {
             return Vector3f(rayWorld.x, rayWorld.y, rayWorld.z).normalize()
         }
 
-    private fun getSpacePosition(): Vector3f = Vector3f(
-        view.m02 * -view.m32 - positionOffset.x,
-        view.m12 * -view.m32 - positionOffset.y,
-        view.m22 * -view.m32 - positionOffset.z,
-    )
+    private fun getSpacePosition(): Vector3f {
+        val inverseView = view.copy().invert()
+        return Vector3f(inverseView.m30, inverseView.m31, inverseView.m32)
+    }
 
     fun update() {
         if (LeftPanel.clicked) return
