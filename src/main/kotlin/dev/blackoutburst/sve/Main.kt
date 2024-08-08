@@ -9,15 +9,17 @@ import dev.blackoutburst.sve.files.FileExplorer
 import dev.blackoutburst.sve.graphics.Axys
 import dev.blackoutburst.sve.graphics.Grid
 import dev.blackoutburst.sve.graphics.Model
+import dev.blackoutburst.sve.graphics.Voxel
 import dev.blackoutburst.sve.io.SVEFiles
+import dev.blackoutburst.sve.maths.Vector3f
 import dev.blackoutburst.sve.ui.LeftPanel
+import dev.blackoutburst.sve.utils.Color
 import dev.blackoutburst.sve.window.Window
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import dev.blackoutburst.sve.utils.main
-import dev.blackoutburst.sve.graphics.Text
-
+import java.io.File
 
 object Main {
     var model: Model? = null
@@ -25,12 +27,15 @@ object Main {
 }
 
 fun main() {
+    File("sve export").mkdirs()
+
     Window
     update()
 }
 
 fun update() {
     model = Model()
+    model!!.addVoxel(Voxel(Vector3f(0f), Color.LIGHT_GRAY))
 
     SVEFiles.export(model!!)
 
@@ -47,7 +52,7 @@ fun update() {
         LeftPanel.update()
         Camera.update()
 
-        if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_E)) {
+        if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_O)) {
             FileExplorer.pickFile { if (it != null) main { model = SVEFiles.load(it) } }
         }
 

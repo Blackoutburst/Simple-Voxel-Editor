@@ -1,10 +1,8 @@
 package dev.blackoutburst.sve.graphics
 
 import dev.blackoutburst.sve.camera.Camera
-import dev.blackoutburst.sve.maths.Vector3f
 import dev.blackoutburst.sve.shader.Shader
 import dev.blackoutburst.sve.shader.ShaderProgram
-import dev.blackoutburst.sve.utils.Color
 import dev.blackoutburst.sve.utils.stack
 import org.lwjgl.opengl.GL30.*
 
@@ -18,7 +16,7 @@ class Model {
         private val shaderProgram = ShaderProgram(vertexShader, fragmentShader)
     }
 
-    val voxels = mutableListOf(Voxel(Vector3f(0f), Color.LIGHT_GRAY))
+    val voxels = mutableListOf<Voxel>()
 
     private var vaoId = 0
     private var vboId = 0
