@@ -36,7 +36,7 @@ class Model {
     }
 
     private fun generateVAO() {
-        stack(128 * 1024) { stack ->
+        stack(500 * 1000000) { stack ->
             glBindVertexArray(vaoId)
 
             // VBO
