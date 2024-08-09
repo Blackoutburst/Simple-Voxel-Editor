@@ -83,6 +83,16 @@ class Text(var x: Float, var y: Float, var size: Float = 16f, var text: String, 
     private val fragmentShader = Shader(GL_FRAGMENT_SHADER, "/shaders/text.frag")
     private val shaderProgram = ShaderProgram(vertexShader, fragmentShader)
 
+    var width: Float = size
+        get() {
+            return (text.length * size) - ((text.length - 1) * size * 4 / 8f)
+        }
+
+    var height: Float = size
+        get() {
+            return size
+        }
+
     init {
         var ascii = text.toAscii()
         if (processColor)
@@ -142,7 +152,7 @@ class Text(var x: Float, var y: Float, var size: Float = 16f, var text: String, 
     fun render() {
         glUseProgram(shaderProgram.id)
         shaderProgram.setUniform1i("diffuseMap", 0)
-        shaderProgram.setUniformMat4("model", model.translate(x, y).scale(size, size))
+        shaderProgram.setUniformMat4("model", model.setIdentity().translate(x, y).scale(size, size))
         shaderProgram.setUniformMat4("projection", Camera.projection2D)
 
         glActiveTexture(GL_TEXTURE0)

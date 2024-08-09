@@ -45,6 +45,8 @@ object Window {
 
         glfwSwapInterval(GLFW_TRUE)
 
+        glfwCreateStandardCursor(GLFW_POINTING_HAND_CURSOR)
+
         glClearColor(0.1f, 0.1f, 0.1f, 1f)
         glLineWidth(2.0f)
         glPointSize(2.0f)

@@ -9,8 +9,8 @@ import java.io.PrintWriter
 
 object SVEFiles {
 
-    fun export(model: Model) {
-        PrintWriter("sve export/${model.name}.sve").use { writer ->
+    fun export(filePath: String, model: Model) {
+        PrintWriter(filePath).use { writer ->
             model.voxels.forEach {
                 writer.write("${it.position.x} ${it.position.y} ${it.position.z} ${it.color.r} ${it.color.g} ${it.color.b} ${it.color.a}\n")
             }

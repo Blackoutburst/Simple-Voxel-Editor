@@ -1,5 +1,6 @@
 package dev.blackoutburst.sve
 
+import dev.blackoutburst.sve.graphics.Text
 import dev.blackoutburst.sve.Main.model
 import dev.blackoutburst.sve.Main.queue
 import dev.blackoutburst.sve.camera.Camera
@@ -18,7 +19,6 @@ import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import dev.blackoutburst.sve.utils.main
-import java.io.File
 
 object Main {
     var model: Model? = null
@@ -26,8 +26,7 @@ object Main {
 }
 
 fun main() {
-    File("sve export").mkdirs()
-
+    FileExplorer.init()
     Window
     update()
 }
@@ -35,8 +34,6 @@ fun main() {
 fun update() {
     model = Model()
     model!!.addVoxel(Voxel(Vector3f(0f), Color.LIGHT_GRAY))
-
-    SVEFiles.export(model!!)
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glEnable(GL_BLEND)
@@ -53,6 +50,10 @@ fun update() {
 
         if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_O)) {
             FileExplorer.pickFile { if (it != null) main { model = SVEFiles.load(it) } }
+        }
+
+        if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_S)) {
+            FileExplorer.saveFile { if (it != null) main { SVEFiles.export(it, model!!) } }
         }
 
         glEnable(GL_DEPTH_TEST)

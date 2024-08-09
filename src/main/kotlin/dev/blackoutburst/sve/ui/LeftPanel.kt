@@ -1,19 +1,26 @@
 package dev.blackoutburst.sve.ui
 
+import dev.blackoutburst.sve.Main.model
+import dev.blackoutburst.sve.files.FileExplorer
 import dev.blackoutburst.sve.graphics.ColoredBox
 import dev.blackoutburst.sve.graphics.HueBox
 import dev.blackoutburst.sve.graphics.ColorPickerBox
 import dev.blackoutburst.sve.input.Keyboard
 import dev.blackoutburst.sve.input.Mouse
+import dev.blackoutburst.sve.io.SVEFiles
 import dev.blackoutburst.sve.utils.Color
+import dev.blackoutburst.sve.utils.main
 import dev.blackoutburst.sve.window.Window
-import org.lwjgl.glfw.GLFW
+import org.lwjgl.glfw.GLFW.*
 
 object LeftPanel {
     var clicked = false
 
     private val picker = ColorPickerBox(10f, 30f, 180f, 180f)
     private val hueSlider = HueBox(10f, 10f, 180f, 10f)
+
+    private val importButton = Button(10f, Window.height - 40f, 180f, 30f, "Import")
+    private val exportButton = Button(10f, Window.height - 80f, 180f, 30f, "Export")
 
     private var selectedColorHistory: List<ColoredBox> = emptyList()
 
@@ -50,7 +57,21 @@ object LeftPanel {
     }
 
     fun update() {
+        if (Keyboard.isKeyPressed(GLFW_KEY_P))
+            visible = !visible
+
         clicked = (Mouse.isButtonDown(Mouse.LEFT_BUTTON) || Mouse.isButtonDown(Mouse.RIGHT_BUTTON)) && Mouse.position.x <= 200f && visible
+        if (!visible) return
+
+        importButton.y = Window.height - 40f
+        importButton.onHover { importButton.backgroundColor = Color(0.15f) }
+        importButton.onExit { importButton.backgroundColor = Color(0.1f) }
+        importButton.onClick { FileExplorer.pickFile { if (it != null) main { model = SVEFiles.load(it) } } }
+
+        exportButton.y = Window.height - 80f
+        exportButton.onHover { exportButton.backgroundColor = Color(0.15f) }
+        exportButton.onExit { exportButton.backgroundColor = Color(0.1f) }
+        exportButton.onClick { FileExplorer.saveFile { if (it != null) main { SVEFiles.export(it, model!!) } } }
 
         getColorFromHistory()
 
@@ -73,9 +94,6 @@ object LeftPanel {
 
             selectedColorHistory[0].color = selectedColor
         }
-
-        if (Keyboard.isKeyPressed(GLFW.GLFW_KEY_P))
-            visible = !visible
     }
 
     fun render() {
@@ -86,5 +104,8 @@ object LeftPanel {
         selectedColorHistory.forEach {
             it.render()
         }
+
+        importButton.render()
+        exportButton.render()
     }
 }
