@@ -1,5 +1,9 @@
-# Simple Voxel Editor
+<img align="right" src="https://github.com/user-attachments/assets/8d074b45-4129-48df-b7f6-7174618a5a9d" height="90" width="90">
 Simple Voxel Editor (aka SVE) is a simple software to create small voxelized 3D models
+
+# Simple Voxel Editor
+
+
 ![capture](https://github.com/user-attachments/assets/9a5a65e2-d49c-48fe-8f3a-f345d9ac24db)
 
 ## Controls
