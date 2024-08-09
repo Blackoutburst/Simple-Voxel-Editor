@@ -17,3 +17,15 @@ Simple Voxel Editor (aka SVE) is a simple software to create small voxelized 3D 
 - Reset Camera: **R**
 - Open File: **O**
 - Save File: **S**
+
+## File Format
+SVE files use the simplest format possible\
+Each line represent a voxel
+```SVE
+// X Y Z R G B A
+-1.0 0.0 0.0 0.36666667 0.22855559 0.1364815 1.0
+-1.0 1.0 0.0 0.36666667 0.22855559 0.1364815 1.0
+-1.0 2.0 0.0 0.36666667 0.22855559 0.1364815 1.0
+-1.0 3.0 0.0 0.36666667 0.22855559 0.1364815 1.0
+...
+```
