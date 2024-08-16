@@ -11,6 +11,8 @@ import dev.blackoutburst.sve.io.SVEFiles
 import dev.blackoutburst.sve.utils.Color
 import dev.blackoutburst.sve.utils.main
 import dev.blackoutburst.sve.window.Window
+import dev.blackoutburst.sve.graphics.Text
+import dev.blackoutburst.sve.maths.Vector3f
 import org.lwjgl.glfw.GLFW.*
 
 object LeftPanel {
@@ -21,6 +23,17 @@ object LeftPanel {
 
     private val importButton = Button(10f, Window.height - 40f, 180f, 30f, "Import")
     private val exportButton = Button(10f, Window.height - 80f, 180f, 30f, "Export")
+
+    private val shiftText = Text(10f, Window.height - 120f, 16f, "Shift model position")
+
+    private val shiftXP = Button(10f, Window.height - 160f, 50f, 30f, "X+")
+    private val shiftXN = Button(70f, Window.height - 160f, 50f, 30f, "X-")
+
+    private val shiftYP = Button(10f, Window.height - 200f, 50f, 30f, "Y+")
+    private val shiftYN = Button(70f, Window.height - 200f, 50f, 30f, "Y-")
+
+    private val shiftZP = Button(10f, Window.height - 240f, 50f, 30f, "Z+")
+    private val shiftZN = Button(70f, Window.height - 240f, 50f, 30f, "Z-")
 
     private var selectedColorHistory: List<ColoredBox> = emptyList()
 
@@ -73,6 +86,38 @@ object LeftPanel {
         exportButton.onExit { exportButton.backgroundColor = Color(0.1f) }
         exportButton.onClick { FileExplorer.saveFile { if (it != null) main { SVEFiles.export(it, model!!) } } }
 
+        shiftText.y = Window.height - 120f
+
+        shiftXP.y = Window.height - 160f
+        shiftXP.onHover { shiftXP.backgroundColor = Color(0.15f) }
+        shiftXP.onExit { shiftXP.backgroundColor = Color(0.1f) }
+        shiftXP.onClick { model!!.shiftPosition(Vector3f(1f, 0f, 0f)) }
+
+        shiftXN.y = Window.height - 160f
+        shiftXN.onHover { shiftXN.backgroundColor = Color(0.15f) }
+        shiftXN.onExit { shiftXN.backgroundColor = Color(0.1f) }
+        shiftXN.onClick { model!!.shiftPosition(Vector3f(-1f, 0f, 0f)) }
+
+        shiftYP.y = Window.height - 200f
+        shiftYP.onHover { shiftYP.backgroundColor = Color(0.15f) }
+        shiftYP.onExit { shiftYP.backgroundColor = Color(0.1f) }
+        shiftYP.onClick { model!!.shiftPosition(Vector3f(0f, 1f, 0f)) }
+
+        shiftYN.y = Window.height - 200f
+        shiftYN.onHover { shiftYN.backgroundColor = Color(0.15f) }
+        shiftYN.onExit { shiftYN.backgroundColor = Color(0.1f) }
+        shiftYN.onClick { model!!.shiftPosition(Vector3f(0f, -1f, 0f)) }
+
+        shiftZP.y = Window.height - 240f
+        shiftZP.onHover { shiftZP.backgroundColor = Color(0.15f) }
+        shiftZP.onExit { shiftZP.backgroundColor = Color(0.1f) }
+        shiftZP.onClick { model!!.shiftPosition(Vector3f(0f, 0f, 1f)) }
+
+        shiftZN.y = Window.height - 240f
+        shiftZN.onHover { shiftZN.backgroundColor = Color(0.15f) }
+        shiftZN.onExit { shiftZN.backgroundColor = Color(0.1f) }
+        shiftZN.onClick { model!!.shiftPosition(Vector3f(0f, 0f, -1f)) }
+
         getColorFromHistory()
 
         background.height = Window.height.toFloat()
@@ -107,5 +152,15 @@ object LeftPanel {
 
         importButton.render()
         exportButton.render()
+
+        shiftText.render()
+        shiftXP.render()
+        shiftXN.render()
+
+        shiftYP.render()
+        shiftYN.render()
+
+        shiftZP.render()
+        shiftZN.render()
     }
 }

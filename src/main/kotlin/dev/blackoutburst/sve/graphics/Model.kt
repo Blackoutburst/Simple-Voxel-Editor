@@ -1,6 +1,8 @@
 package dev.blackoutburst.sve.graphics
 
 import dev.blackoutburst.sve.camera.Camera
+import dev.blackoutburst.sve.maths.Vector3f
+import dev.blackoutburst.sve.maths.Vector3i
 import dev.blackoutburst.sve.shader.Shader
 import dev.blackoutburst.sve.shader.ShaderProgram
 import dev.blackoutburst.sve.utils.stack
@@ -155,6 +157,13 @@ class Model {
         calculateVertexArray()
         calculateIndexArray()
         generateVAO()
+    }
+
+    fun shiftPosition(shift: Vector3f) {
+        voxels.forEach {
+            it.position += shift
+        }
+        updateModel()
     }
 
     fun addVoxel(voxel: Voxel) {
