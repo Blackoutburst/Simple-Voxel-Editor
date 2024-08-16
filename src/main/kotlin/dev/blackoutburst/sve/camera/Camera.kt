@@ -95,7 +95,25 @@ object Camera {
         if (Mouse.isButtonPressed(Mouse.LEFT_BUTTON)) {
             val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
-                Main.model!!.removeVoxel(b)
+                val voxels = mutableListOf<Voxel>()
+                voxels.add(b)
+
+                if (LeftPanel.xMirror) {
+                    val v = Main.model!!.getVoxelByPosition(Vector3f(-(b.position.x) -1f, b.position.y, b.position.z))
+                    if (v != null) voxels.add(v)
+                }
+
+                if (LeftPanel.yMirror) {
+                    val v = Main.model!!.getVoxelByPosition(Vector3f(b.position.x, -(b.position.y) - 1f, b.position.z))
+                    if (v != null) voxels.add(v)
+                }
+
+                if (LeftPanel.zMirror) {
+                    val v = Main.model!!.getVoxelByPosition(Vector3f(b.position.x, b.position.y, -(b.position.z) - 1f))
+                    if (v != null) voxels.add(v)
+                }
+
+                Main.model!!.removeVoxels(voxels)
             }
         }
 
@@ -103,7 +121,17 @@ object Camera {
             val result = dda(getSpacePosition(), ray, 50)
             result.block?.let { b ->
                 result.face?.let { f ->
-                    Main.model!!.addVoxel(Voxel(b.position + f.toFloat(), LeftPanel.selectedColor))
+                    val voxels = mutableListOf<Voxel>()
+                    voxels.add(Voxel(b.position + f.toFloat(), LeftPanel.selectedColor))
+
+                    if (LeftPanel.xMirror)
+                        voxels.add(Voxel(Vector3f(-(b.position.x + f.x) - 1f, b.position.y + f.y, b.position.z + f.z), LeftPanel.selectedColor))
+                    if (LeftPanel.yMirror)
+                        voxels.add(Voxel(Vector3f(b.position.x + f.x, -(b.position.y + f.y) - 1f, b.position.z + f.z), LeftPanel.selectedColor))
+                    if (LeftPanel.zMirror)
+                        voxels.add(Voxel(Vector3f(b.position.x + f.x, b.position.y + f.y, -(b.position.z + f.z) - 1f), LeftPanel.selectedColor))
+
+                    Main.model!!.addVoxels(voxels)
                 }
             }
         }

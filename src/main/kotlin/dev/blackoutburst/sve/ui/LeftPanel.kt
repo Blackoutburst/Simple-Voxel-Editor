@@ -18,6 +18,10 @@ import org.lwjgl.glfw.GLFW.*
 object LeftPanel {
     var clicked = false
 
+    var xMirror = false
+    var yMirror = false
+    var zMirror = false
+
     private val picker = ColorPickerBox(10f, 30f, 180f, 180f)
     private val hueSlider = HueBox(10f, 10f, 180f, 10f)
 
@@ -34,6 +38,11 @@ object LeftPanel {
 
     private val shiftZP = Button(10f, Window.height - 240f, 50f, 30f, "Z+")
     private val shiftZN = Button(70f, Window.height - 240f, 50f, 30f, "Z-")
+
+    private val mirrorText = Text(10f, Window.height - 280f, 16f, "Mirror")
+    private val mirrorX = Button(10f, Window.height - 320f, 40f, 30f, "X")
+    private val mirrorY = Button(60f, Window.height - 320f, 40f, 30f, "Y")
+    private val mirrorZ = Button(110f, Window.height - 320f, 40f, 30f, "Z")
 
     private var selectedColorHistory: List<ColoredBox> = emptyList()
 
@@ -118,6 +127,26 @@ object LeftPanel {
         shiftZN.onExit { shiftZN.backgroundColor = Color(0.1f) }
         shiftZN.onClick { model!!.shiftPosition(Vector3f(0f, 0f, -1f)) }
 
+        mirrorText.y = Window.height - 280f
+
+        mirrorX.y = Window.height - 320f
+        mirrorX.outlineColor = if (xMirror) Color.GREEN else Color.RED
+        mirrorX.onHover { mirrorX.backgroundColor = Color(0.15f) }
+        mirrorX.onExit { mirrorX.backgroundColor = Color(0.1f) }
+        mirrorX.onClick { xMirror = !xMirror }
+
+        mirrorY.y = Window.height - 320f
+        mirrorY.outlineColor = if (yMirror) Color.GREEN else Color.RED
+        mirrorY.onHover { mirrorY.backgroundColor = Color(0.15f) }
+        mirrorY.onExit { mirrorY.backgroundColor = Color(0.1f) }
+        mirrorY.onClick { yMirror = !yMirror }
+
+        mirrorZ.y = Window.height - 320f
+        mirrorZ.outlineColor = if (zMirror) Color.GREEN else Color.RED
+        mirrorZ.onHover { mirrorZ.backgroundColor = Color(0.15f) }
+        mirrorZ.onExit { mirrorZ.backgroundColor = Color(0.1f) }
+        mirrorZ.onClick { zMirror = !zMirror }
+
         getColorFromHistory()
 
         background.height = Window.height.toFloat()
@@ -162,5 +191,10 @@ object LeftPanel {
 
         shiftZP.render()
         shiftZN.render()
+
+        mirrorText.render()
+        mirrorX.render()
+        mirrorY.render()
+        mirrorZ.render()
     }
 }

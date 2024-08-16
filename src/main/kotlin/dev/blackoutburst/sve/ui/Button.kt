@@ -23,6 +23,10 @@ class Button(
         }
 
     var outlineColor: Color = Color(0.2f)
+        set(value) {
+            field = value
+            outline.color = value
+        }
 
     var x: Float = x
     set(value) {

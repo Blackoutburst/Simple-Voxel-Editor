@@ -166,17 +166,25 @@ class Model {
         updateModel()
     }
 
-    fun addVoxel(voxel: Voxel) {
-        voxels.add(voxel)
+    fun addVoxels(voxels: List<Voxel>) {
+        for (voxel in voxels) {
+            if (getVoxelByPosition(voxel.position) != null) continue
+            this.voxels.add(voxel)
+        }
+
         updateModel()
     }
 
-    fun removeVoxel(voxel: Voxel) {
-        if (voxels.size == 1) return
+    fun removeVoxels(voxels: List<Voxel>) {
+        for (voxel in voxels) {
+            if (this.voxels.size == 1) break
 
-        voxels.remove(voxel)
+            this.voxels.remove(voxel)
+        }
         updateModel()
     }
+
+    fun getVoxelByPosition(position: Vector3f): Voxel? = voxels.firstOrNull { it.position.x == position.x && it.position.y == position.y && it.position.z == position.z }
 
     fun render() {
         glBindVertexArray(vaoId)

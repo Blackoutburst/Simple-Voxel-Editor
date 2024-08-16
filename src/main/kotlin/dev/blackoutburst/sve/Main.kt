@@ -33,7 +33,7 @@ fun main() {
 
 fun update() {
     model = Model()
-    model!!.addVoxel(Voxel(Vector3f(0f), Color.LIGHT_GRAY))
+    model!!.addVoxels(listOf(Voxel(Vector3f(0f), Color.LIGHT_GRAY)))
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glEnable(GL_BLEND)
