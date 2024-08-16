@@ -78,7 +78,7 @@ class Text(var x: Float, var y: Float, var size: Float = 16f, var text: String, 
 
     private var model = Matrix()
 
-    private val texture = Texture("./ascii.png")
+    private val texture = Texture("ascii.png")
     private val vertexShader = Shader(GL_VERTEX_SHADER, "/shaders/text.vert")
     private val fragmentShader = Shader(GL_FRAGMENT_SHADER, "/shaders/text.frag")
     private val shaderProgram = ShaderProgram(vertexShader, fragmentShader)

@@ -87,7 +87,7 @@ sourceSets {
 }
 
 tasks.withType<ShadowJar>().configureEach {
-    archiveBaseName.set("client-shadow")
+    archiveBaseName.set("sve-shadow")
     mergeServiceFiles()
     from(sourceSets.main.get().output)
     configurations = listOf(project.configurations.runtimeClasspath.get())

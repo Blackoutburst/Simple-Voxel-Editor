@@ -30,3 +30,8 @@ Each line represent a voxel
 -1.0 3.0 0.0 0.36666667 0.22855559 0.1364815 1.0
 ...
 ```
+
+## Building
+```
+./gradlew build
+```
