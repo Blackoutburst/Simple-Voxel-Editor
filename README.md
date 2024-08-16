@@ -37,6 +37,8 @@ Each line represent a voxel
 ```
 
 ## Building
+> [!IMPORTANT]
+> Java 21+ is required
 ```
 ./gradlew build
 ```
